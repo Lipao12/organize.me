@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { BrowserRouter } from "react-router-dom"; // Use BrowserRouter, não Router.
 import { Sidebar } from "./(components)/sidebar";
 import { Dashboard } from "./dashboard/page";
 import StoreProvider, { useAppSelector } from "./redux";
@@ -16,7 +17,8 @@ const AppLayout = () => {
     } else {
       document.documentElement.classList.add("light");
     }
-  }, []);
+  }, [isDarkMode]);
+
   return (
     <div
       className={`${
@@ -37,9 +39,11 @@ const AppLayout = () => {
 
 function App() {
   return (
-    <StoreProvider>
-      <AppLayout></AppLayout>
-    </StoreProvider>
+    <BrowserRouter>
+      <StoreProvider>
+        <AppLayout />
+      </StoreProvider>
+    </BrowserRouter>
   );
 }
 

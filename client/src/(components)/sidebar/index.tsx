@@ -1,8 +1,9 @@
 "use client";
 
-import { Menu, Moon, Sun } from "lucide-react";
+import { Layout, Menu, Moon, Sun, Users } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { setIsDarkMode, setIsSidebarCollapsed } from "../../state";
+import { SidebarLink } from "./links";
 
 export const Sidebar = () => {
   const dispatch = useAppDispatch();
@@ -52,9 +53,23 @@ export const Sidebar = () => {
         </div>
 
         {/* LINKS */}
-        <div className="flex-grow mt-8"></div>
+        <div className="flex-grow mt-8">
+          <SidebarLink
+            href="/dashboard"
+            icon={Layout}
+            label="Dashboard"
+            isCollapsed={isSidebarCollapsed}
+          />
+          <SidebarLink
+            href="/clients"
+            icon={Users}
+            label="Clientes"
+            isCollapsed={isSidebarCollapsed}
+          />
+        </div>
 
-        <div className="flex flex-col items-center">
+        {/* FOOTER */}
+        <div className="flex flex-col items-center my-5">
           <button
             onClick={() => {
               changeDarkMode();
@@ -70,7 +85,9 @@ export const Sidebar = () => {
             )}
           </button>
 
-          <div className="mt-3">
+          <div
+            className={`mt-3 ${isSidebarCollapsed ? "hidden" : "block"} mb-5`}
+          >
             <p className="text-center text-xs text-gray-500">
               &copy; 2024 DREMED
             </p>
