@@ -1,6 +1,7 @@
 "use client";
 
 import { Layout, Menu, Moon, Sun, Users } from "lucide-react";
+import logo from "../../assets/logo.jpg";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { setIsDarkMode, setIsSidebarCollapsed } from "../../state";
 import { SidebarLink } from "./links";
@@ -32,14 +33,21 @@ export const Sidebar = () => {
             isSidebarCollapsed ? "px-5" : "px-8"
           }`}
         >
-          <div>Logo</div>
-          <h1
-            className={`font-extrabold text-2xl ${
-              isSidebarCollapsed ? "hidden" : "block"
-            }`}
-          >
-            DREMED
-          </h1>
+          <div className="flex items-center space-x-3">
+            <img
+              src={logo}
+              alt="Logo"
+              className={`h-8 w-8 
+                 object-contain`}
+            />
+            <h1
+              className={`font-extrabold text-2xl ${
+                isSidebarCollapsed ? "hidden" : "block"
+              }`}
+            >
+              ClaraMente
+            </h1>
+          </div>
           <button
             className="md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100"
             onClick={() => {
