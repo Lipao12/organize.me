@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { BrowserRouter } from "react-router-dom"; // Use BrowserRouter, não Router.
+import { BrowserRouter, Route, Routes } from "react-router-dom"; // Use BrowserRouter, não Router.
 import { Sidebar } from "./(components)/sidebar";
 import { Dashboard } from "./dashboard/page";
+import { Inventory } from "./inventory/page";
 import StoreProvider, { useAppSelector } from "./redux";
 
 const AppLayout = () => {
@@ -31,7 +32,11 @@ const AppLayout = () => {
           isSidebarCollapsed ? "md:pl-24" : "md:pl-72"
         }`}
       >
-        <Dashboard />
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/inventory" element={<Inventory />} />
+          {/* Adicione outras rotas conforme necessário */}
+        </Routes>
       </main>
     </div>
   );
