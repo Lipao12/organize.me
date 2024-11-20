@@ -1,131 +1,99 @@
-import { useEffect, useState } from "react";
+"use client";
+
+import { Search } from "lucide-react";
+import { useState } from "react";
 import { useAppSelector } from "../redux";
-import { Table } from "./components/table";
+import { useGetAllProductsQuery } from "../state/api";
+import { Product } from "../type/type";
+
+const columns = [
+  { field: "productId", headerName: "ID", width: 90 },
+  { field: "name", headerName: "Product Name", width: 200 },
+  { field: "price", headerName: "Price", width: 110 },
+  { field: "rating", headerName: "Rating", width: 110 },
+  { field: "stockQuantity", headerName: "Stock Quantity", width: 150 },
+];
 
 export const Inventory = () => {
-  const [data, setData] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] =
-    useState<string>(searchTerm);
-
+  const user_id = { user_id: "3b0fd66b-a4d6-4d95-94e4-01940c99aedb" };
+  const {
+    data: products,
+    isError,
+    isLoading,
+  } = useGetAllProductsQuery(user_id);
+  const [searchTerm, setSearchTerm] = useState("");
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
-  // Estados para controlar a paginação
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Número de itens por página
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 300);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchTerm]);
-
-  const filteredData = data.filter((item) => {
-    if (debouncedSearchTerm === "") return true;
-    return Object.values(item).some((val) =>
-      String(val).toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div
+          className={`animate-spin rounded-full h-16 w-16 border-b-2 ${
+            isDarkMode ? "border-black" : "border-gray-800"
+          }`}
+        ></div>
+        <span className={`ml-4`}>Carregando dados...</span>
+      </div>
     );
-  });
+  }
 
-  // Paginação
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  if (isError || !products) {
+    return (
+      <div className="text-center text-red-500 py-4">
+        Failed to fetch products
+      </div>
+    );
+  }
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
+  const filteredProducts = products?.products.filter((product: Product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Inventário</h1>
-      {/* Campo de busca */}
-      <input
-        type="text"
-        placeholder="Pesquise no estoque..."
-        aria-label="Pesquisar estoque"
-        className="w-full mb-4 p-2 rounded-md bg-gray-200"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-
-      {/* Carregando... */}
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <div
-            className={`animate-spin rounded-full h-16 w-16 border-b-2 ${
-              isDarkMode ? "border-black" : "border-gray-800"
-            }`}
-          ></div>
-          <span className={`ml-4`}>Carregando dados...</span>
+    <div className="flex flex-col">
+      {/* SEARCH BAR */}
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 ">
+        <div className="relative flex-grow">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Pesquisar produtos..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-      ) : currentItems.length === 0 ? (
-        <p className="text-gray-400">Nenhum item encontrado.</p>
-      ) : (
-        <>
-          {/* Tabela de resultados */}
-          <Table items={currentItems} />
+      </div>
 
-          {/* Botões de paginação */}
-          <div className="flex justify-between mt-4">
-            <div className="space-x-2">
-              <button
-                type="button"
-                onClick={() => {
-                  if (currentPage > 1) setCurrentPage(1);
-                }}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+      {/* TABLE */}
+      <table className="min-w-full table-auto bg-white shadow rounded-lg border border-gray-200 mt-5">
+        <thead>
+          <tr className="bg-gray-100">
+            {columns.map((col) => (
+              <th
+                key={col.field}
+                className="px-4 py-2 text-left font-semibold text-gray-700"
+                style={{ width: col.width }}
               >
-                Primeira
-              </button>
-              <button
-                type="button"
-                onClick={prevPage}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
-              >
-                Anterior
-              </button>
-            </div>
-            <span className="text-white">
-              Página {currentPage} de {totalPages}
-            </span>
-            <div className="space-x-2">
-              <button
-                type="button"
-                onClick={nextPage}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
-              >
-                Próxima
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (currentPage < totalPages) setCurrentPage(totalPages);
-                }}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
-              >
-                Última
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+                {col.headerName}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {filteredProducts.map((product: any) => (
+            <tr key={product.productId} className="border-b">
+              {columns.map((col) => (
+                <td key={col.field} className="px-4 py-2 text-gray-700">
+                  {col.field === "price"
+                    ? `$${product[col.field]}`
+                    : product[col.field] || "N/A"}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

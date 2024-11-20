@@ -8,7 +8,6 @@ import {
   Star,
 } from "lucide-react";
 import { useState } from "react";
-import { useAppSelector } from "../redux";
 import { useGetProductsQuery } from "../state/api";
 import { Product } from "../type/type";
 
@@ -26,8 +25,6 @@ export const Products = () => {
     isError,
   } = useGetProductsQuery(pagination);
 
-  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
-
   const handleNextPage = () => {
     if (products && pagination.page * pagination.page_size < products.total) {
       setPagination((prev) => ({ ...prev, page: prev.page + 1 }));
@@ -43,7 +40,7 @@ export const Products = () => {
   const filteredProducts = products?.products.filter((product: Product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  console.log(products);
+
   const renderStars = (rating: number) => {
     const validRating = typeof rating === "number" ? rating : 0;
     return Array.from({ length: 5 }).map((_, index) => (

@@ -29,3 +29,15 @@ class ProductsRepository:
 
         return products, total
     
+    def find_all_products(self, user_id: str) -> List[Tuple]:
+        cursor = self.conn.cursor()
+        cursor.execute(
+            '''
+            SELECT * FROM Products
+            WHERE user_id = %s
+            ORDER BY productId
+            ''',
+            (user_id,)
+        )
+        products = cursor.fetchall()
+        return products

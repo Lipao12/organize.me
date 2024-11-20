@@ -1,17 +1,41 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Product } from "../type/type";
+import { ExpenseByCategorySummary, ExpenseSummary, Product, PurchaseSummary, SalesSummary } from "../type/type";
+
+type AllProductsResponse = {
+  products: Product[];
+};
 
 type ProductsResponse = {
   products: Product[];
   total: number;
 };
 
+type DashboardMetrics = {
+  popularProducts: Product[];
+  salesSummary: SalesSummary[];
+  purchaseSummary: PurchaseSummary[];
+  expenseSummary: ExpenseSummary[];
+  expenseByCategorySummary: ExpenseByCategorySummary[];
+}
+
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
   reducerPath: "api",
-  tagTypes: ["Products"],
+  tagTypes: ["DashboardMetrics", "Products"],
   endpoints: (build) => ({
+    getDashboardMetrics: build.query<DashboardMetrics, void>({
+      query: () => "/dashboard",
+      providesTags: ["DashboardMetrics"],
+    }),
+    getAllProducts: build.query<AllProductsResponse, {user_id: string} | void>({
+      query: (body) => ({
+        url: "/products/all",
+        method: "POST",
+        body: body,
+      }),
+      providesTags: ["Products"],
+    }),
     getProducts: build.query<ProductsResponse, string | void | any>({
       query: (body) => ({
         url: "/products",
@@ -23,4 +47,4 @@ export const api = createApi({
   }),
 });
 
-export const {useGetProductsQuery } = api;
+export const {useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery } = api;
