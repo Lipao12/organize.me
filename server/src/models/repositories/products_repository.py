@@ -18,4 +18,14 @@ class ProductsRepository:
             (user_id, page_size, offset)
         )
         products = cursor.fetchall()
-        return products
+        cursor.execute(
+            '''
+            SELECT COUNT(*) FROM Products
+            WHERE user_id = %s
+            ''',
+            (user_id,)
+        )
+        total = cursor.fetchone()[0]
+
+        return products, total
+    

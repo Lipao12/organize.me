@@ -11,7 +11,7 @@ from src.models.repositories.products_repository import ProductsRepository
 # Importação o gerente de conexões
 from src.models.settings.db_connection_handler import db_connection_handler
 
-@inventory_bp.route("/products", methods=["GET"])
+@inventory_bp.route("/products", methods=["POST"])
 def find_all_products():
     conn = db_connection_handler.get_connection()
     products_repository = ProductsRepository(conn)
