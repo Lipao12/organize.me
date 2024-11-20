@@ -1,15 +1,21 @@
 CREATE TABLE Products (
     productId VARCHAR PRIMARY KEY,
+    user_id INTEGER NOT NULL,
     name VARCHAR NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     rating DECIMAL(2, 1),
-    stockQuantity INT NOT NULL
+    stockQuantity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE Users (
-    userId VARCHAR PRIMARY KEY,
-    name VARCHAR NOT NULL,
-    email VARCHAR NOT NULL
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Sales (
@@ -67,3 +73,6 @@ CREATE TABLE PurchaseSummary (
     changePercentage DECIMAL(10, 2) NOT NULL,
     date DATE NOT NULL
 );
+
+CREATE INDEX idx_user_id ON Products (user_id);
+CREATE INDEX idx_product_name ON Products (name);
