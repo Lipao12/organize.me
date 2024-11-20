@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"; // Use BrowserR
 import { Sidebar } from "./(components)/sidebar";
 import { Dashboard } from "./dashboard/page";
 import { Inventory } from "./inventory/page";
+import { Products } from "./products/page";
 import StoreProvider, { useAppSelector } from "./redux";
 
 const AppLayout = () => {
@@ -35,6 +36,7 @@ const AppLayout = () => {
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />
+          <Route path="/products" element={<Products />} />
           {/* Adicione outras rotas conforme necessário */}
         </Routes>
       </main>

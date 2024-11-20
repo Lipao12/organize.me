@@ -1,6 +1,14 @@
 "use client";
 
-import { Archive, Layout, Menu, Moon, Sun, Users } from "lucide-react";
+import {
+  Archive,
+  Clipboard,
+  Layout,
+  Menu,
+  Moon,
+  Sun,
+  Users,
+} from "lucide-react";
 import logo from "../../assets/logo.jpg";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { setIsDarkMode, setIsSidebarCollapsed } from "../../state";
@@ -72,6 +80,12 @@ export const Sidebar = () => {
             href="/inventory"
             icon={Archive}
             label="Inventário"
+            isCollapsed={isSidebarCollapsed}
+          />
+          <SidebarLink
+            href="/products"
+            icon={Clipboard}
+            label="Produtos"
             isCollapsed={isSidebarCollapsed}
           />
           <SidebarLink
