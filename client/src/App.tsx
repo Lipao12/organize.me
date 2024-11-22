@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom"; // Use BrowserRouter, não Router.
+import { Navbar } from "./(components)/navbar";
 import { Sidebar } from "./(components)/sidebar";
 import { Dashboard } from "./dashboard/page";
 import { Inventory } from "./inventory/page";
@@ -33,6 +34,7 @@ const AppLayout = () => {
           isSidebarCollapsed ? "md:pl-24" : "md:pl-72"
         }`}
       >
+        <Navbar />
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />

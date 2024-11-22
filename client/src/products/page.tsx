@@ -8,6 +8,7 @@ import {
   Star,
 } from "lucide-react";
 import { useState } from "react";
+import { useAppSelector } from "../redux";
 import { useGetProductsQuery } from "../state/api";
 import { Product } from "../type/type";
 
@@ -18,6 +19,7 @@ export const Products = () => {
     page_size: 15,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   const {
     data: products,
@@ -56,7 +58,16 @@ export const Products = () => {
   };
 
   if (isLoading) {
-    return <div className="py-4">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div
+          className={`animate-spin rounded-full h-16 w-16 border-b-2 ${
+            isDarkMode ? "border-black" : "border-gray-800"
+          }`}
+        ></div>
+        <span className={`ml-4`}>Carregando dados...</span>
+      </div>
+    );
   }
 
   if (isError || !products) {

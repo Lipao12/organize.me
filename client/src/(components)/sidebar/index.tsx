@@ -117,7 +117,7 @@ export const Sidebar = () => {
             className={`mt-3 ${isSidebarCollapsed ? "hidden" : "block"} mb-5`}
           >
             <p className="text-center text-xs text-gray-500">
-              &copy; 2024 DREMED
+              &copy; 2024 Organize.me
             </p>
           </div>
         </div>
