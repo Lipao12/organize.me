@@ -132,7 +132,7 @@ export const Inventory = () => {
               {columns.map((col) => (
                 <td key={col.field} className="px-4 py-2 text-gray-700">
                   {col.field === "price"
-                    ? `$${product[col.field]}`
+                    ? `R$ ${product[col.field]}`
                     : product[col.field] || "N/A"}
                 </td>
               ))}
