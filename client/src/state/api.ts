@@ -10,6 +10,13 @@ type ProductsResponse = {
   total: number;
 };
 
+export interface NewProduct {
+  name: string;
+  price: number;
+  rating?: number;
+  stock_quantity: number;
+}
+
 type DashboardMetrics = {
   popularProducts: Product[];
   salesSummary: SalesSummary[];
@@ -27,6 +34,14 @@ export const api = createApi({
     getDashboardMetrics: build.query<DashboardMetrics, void>({
       query: () => "/dashboard",
       providesTags: ["DashboardMetrics"],
+    }),
+    createProduct: build.mutation<Product, NewProduct>({
+      query: (newProduct) => ({
+        url: "/products/create",
+        method: "POST",
+        body: newProduct,
+      }),
+      invalidatesTags: ["Products"],
     }),
     getAllProducts: build.query<AllProductsResponse, {user_id: string} | void>({
       query: (body) => ({
@@ -47,4 +62,4 @@ export const api = createApi({
   }),
 });
 
-export const {useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery } = api;
+export const {useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, useCreateProductMutation} = api;

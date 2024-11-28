@@ -14,7 +14,7 @@ class ProductsFinder:
                 }
             try:
                 page = int(request_data.get('page', 1))
-                page_size = int(request_data.get('page_size', 10))
+                page_size = int(request_data.get('page_size', 12))
             except ValueError:
                 return {
                     "body": {"error": "Invalid 'page' or 'page_size'. Must be integers."},
@@ -27,7 +27,6 @@ class ProductsFinder:
                 }
             
             products, total = self.products_repository.find_products_paginated(user_id, page, page_size)
-
             if not products:
                 return {
                     "body": {"message": "No products found for the specified user."},
@@ -38,7 +37,7 @@ class ProductsFinder:
                     "productId": product[0],  
                     "name": product[2],       
                     "price": float(product[3]),     
-                    "rating": float(product[4]),     
+                    "rating": float(product[4]) if product[4] is not None else 0,     
                     "stockQuantity": product[5]  
                 }
                 for product in products
@@ -50,7 +49,7 @@ class ProductsFinder:
             }
         except Exception as exception:
             return{
-                "body":{"error":"Bad Product Request", "message":str(exception)},
+                "body":{"error":"Bad Product Paginated Request", "message":str(exception)},
             "status_code":400
             }
         
@@ -75,7 +74,7 @@ class ProductsFinder:
                     "productId": product[0],
                     "name": product[2],
                     "price": float(product[3]),
-                    "rating": float(product[4]),
+                    "rating": float(product[4]) if product[4] is not None else 0,
                     "stockQuantity": product[5]
                 }
                 for product in products

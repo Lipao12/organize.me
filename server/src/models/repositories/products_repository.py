@@ -41,3 +41,14 @@ class ProductsRepository:
         )
         products = cursor.fetchall()
         return products
+    
+    def create_product(self, user_id: str, product_id: str, name: str, price: float, stock_quantity: int, rating: float = None) -> None:
+        cursor = self.conn.cursor()
+        cursor.execute(
+            '''
+            INSERT INTO Products (productId, user_id, name, price, stockQuantity, rating)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            ''',
+            (product_id, user_id, name, price, stock_quantity, rating)
+        )
+        self.conn.commit()

@@ -11,12 +11,13 @@ import { useState } from "react";
 import { useAppSelector } from "../redux";
 import { useGetProductsQuery } from "../state/api";
 import { Product } from "../type/type";
+import { CreateProductModal } from "./modal_create_product";
 
 export const Products = () => {
   const [pagination, setPagination] = useState({
     user_id: "3b0fd66b-a4d6-4d95-94e4-01940c99aedb",
     page: 1,
-    page_size: 15,
+    page_size: 12,
   });
   const [searchTerm, setSearchTerm] = useState("");
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
@@ -26,6 +27,8 @@ export const Products = () => {
     isLoading,
     isError,
   } = useGetProductsQuery(pagination);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleNextPage = () => {
     if (products && pagination.page * pagination.page_size < products.total) {
@@ -42,6 +45,14 @@ export const Products = () => {
   const filteredProducts = products?.products.filter((product: Product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const openCreateProductModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeCreateProductModal = () => {
+    setIsModalOpen(false);
+  };
 
   const renderStars = (rating: number) => {
     const validRating = typeof rating === "number" ? rating : 0;
@@ -85,7 +96,8 @@ export const Products = () => {
         <h2 className="text-2xl font-bold text-gray-800">Produtos</h2>
         <button
           className="flex items-center bg-blue-500 hover:bg-blue-700 text-gray-200 font-bold py-2 px-4 rounded"
-          onClick={() => {}}
+          onClick={openCreateProductModal}
+          type="button"
         >
           <PlusCircleIcon className="w-5 h-5 mr-2 !text-gray-200" /> Criar
           Produto
@@ -192,6 +204,12 @@ export const Products = () => {
             Próximo <ChevronRight className="ml-2 h-4 w-4" />
           </button>
         </div>
+      )}
+      {isModalOpen && (
+        <CreateProductModal
+          isOpen={isModalOpen}
+          onClose={closeCreateProductModal}
+        />
       )}
     </div>
   );
