@@ -1,6 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ExpenseByCategorySummary, ExpenseSummary, Product, PurchaseSummary, SalesSummary } from "../type/type";
 
+interface LoginResponse {
+  token: string; 
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
 type AllProductsResponse = {
   products: Product[];
 };
@@ -29,8 +43,16 @@ type DashboardMetrics = {
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
   reducerPath: "api",
-  tagTypes: ["DashboardMetrics", "Products"],
+  tagTypes: ["DashboardMetrics", "Products", "Auth"],
   endpoints: (build) => ({
+    login: build.mutation<LoginResponse, LoginCredentials>({
+      query: (credentials) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: credentials,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
     getDashboardMetrics: build.query<DashboardMetrics, void>({
       query: () => "/dashboard",
       providesTags: ["DashboardMetrics"],
@@ -62,4 +84,4 @@ export const api = createApi({
   }),
 });
 
-export const {useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, useCreateProductMutation} = api;
+export const {useLoginMutation, useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, useCreateProductMutation} = api;

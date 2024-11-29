@@ -9,7 +9,7 @@ class UserLogin:
         email = body.get("email")
         password = body.get("password")
 
-        user_id = self.users_repository.login(email, password)
+        user_id, name = self.users_repository.login(email, password)
 
         if not user_id:
             return {
@@ -19,7 +19,8 @@ class UserLogin:
         try:
             return{
                 "body":{
-                    "id":user_id
+                    "id":user_id,
+                    "name": name
                 },
                 "status_code": 200
             }

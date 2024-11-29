@@ -15,7 +15,7 @@ from src.models.repositories.user_reposityory import UsersRepository
 # Importação o gerente de conexões
 from src.models.settings.db_connection_handler import db_connection_handler
 
-@inventory_bp.route("/register", methods=["POST"])
+@inventory_bp.route("/auth/register", methods=["POST"])
 def create_user():
     conn = db_connection_handler.get_connection()
     users_repository = UsersRepository(conn)
@@ -25,7 +25,7 @@ def create_user():
 
     return jsonify(response['body']), response['status_code']
 
-@inventory_bp.route("/login", methods=["POST"])
+@inventory_bp.route("/auth/login", methods=["POST"])
 def get_user():
     conn = db_connection_handler.get_connection()
     users_repository = UsersRepository(conn)

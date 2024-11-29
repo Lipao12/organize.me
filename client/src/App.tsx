@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom"; // Use BrowserRouter, não Router.
 import { Navbar } from "./(components)/navbar";
+import ProtectedRoute from "./(components)/protected-route/protected-route";
 import { Sidebar } from "./(components)/sidebar";
 import { Dashboard } from "./dashboard/page";
 import { Inventory } from "./inventory/page";
+import AuthScreen from "./login-register/page";
 import { Products } from "./products/page";
 import StoreProvider, { useAppSelector } from "./redux";
 
@@ -36,9 +38,30 @@ const AppLayout = () => {
       >
         <Navbar />
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="/products" element={<Products />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inventory"
+            element={
+              <ProtectedRoute>
+                <Inventory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <ProtectedRoute>
+                <Products />
+              </ProtectedRoute>
+            }
+          />
           {/* Adicione outras rotas conforme necessário */}
         </Routes>
       </main>
@@ -50,7 +73,12 @@ function App() {
   return (
     <BrowserRouter>
       <StoreProvider>
-        <AppLayout />
+        <Routes>
+          {/* Rota pública */}
+          <Route path="/login" element={<AuthScreen />} />
+          {/* Layout principal */}
+          <Route path="/*" element={<AppLayout />} />
+        </Routes>
       </StoreProvider>
     </BrowserRouter>
   );

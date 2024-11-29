@@ -47,11 +47,11 @@ class UsersRepository:
         cursor = self.conn.cursor()
         cursor.execute(
             '''
-            SELECT id, password FROM Users WHERE email = %s
+            SELECT id, password, name FROM Users WHERE email = %s
             ''', 
             (email,)
         )
         user = cursor.fetchone()
         if user and bcrypt.checkpw(password.encode('utf-8'), user[1].encode('utf-8')):
-            return user[0]
+            return [user[0], user[2]]
         return None
