@@ -6,7 +6,8 @@ inventory_bp = Blueprint("inventory", __name__)
 from src.controllers.product_finder import ProductsFinder
 from src.controllers.product_creator import ProductsCreator
 from src.controllers.user_creator import UserCreator 
-from src.controllers.user_login import UserLogin 
+from src.controllers.user_login import UserLogin
+from src.controllers.user_information import UserInformation 
 
 # Importação de Repositorios
 from src.models.repositories.products_repository import ProductsRepository
@@ -35,6 +36,18 @@ def get_user():
 
     return jsonify(response['body']), response['status_code']
 
+@inventory_bp.route("/users/<id>/info", methods=["GET"])
+def get_user_info(id):
+    conn = db_connection_handler.get_connection()
+    users_repository = UsersRepository(conn)
+    controller = UserInformation(users_repository=users_repository)
+    response = controller.getUserInfo({"id": id})
+
+    return jsonify(response['body']), response['status_code']
+
+##
+## ## PRODUCTS
+##
 @inventory_bp.route("/products/create", methods=["POST"])
 def create_product():
     conn = db_connection_handler.get_connection()

@@ -4,11 +4,14 @@ import {
   Archive,
   Clipboard,
   Layout,
+  LogOutIcon,
   Menu,
   Moon,
+  SlidersHorizontal,
   Sun,
   Users,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.jpg";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { setIsDarkMode, setIsSidebarCollapsed } from "../../state";
@@ -20,6 +23,7 @@ export const Sidebar = () => {
     (state) => state.global.isSidebarCollapsed
   );
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  const navigate = useNavigate();
 
   const toogleSideBar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
@@ -94,6 +98,12 @@ export const Sidebar = () => {
             label="Clientes"
             isCollapsed={isSidebarCollapsed}
           />
+          <SidebarLink
+            href="/settings"
+            icon={SlidersHorizontal}
+            label="Configuração"
+            isCollapsed={isSidebarCollapsed}
+          />
         </div>
 
         {/* FOOTER */}
@@ -112,6 +122,19 @@ export const Sidebar = () => {
               <Moon className="cursor-pointer text-gray-500" size={24} />
             )}
           </button>
+          <div className="flex flex-row items-center gap-x-3">
+            <button
+              onClick={() => {
+                localStorage.removeItem("user_id");
+                navigate("/login");
+              }}
+              type="button"
+              className="p-3 bg-gray-100 rounded-full hover:bg-blue-100 mb-4 text-[#fb3b1e]"
+            >
+              <LogOutIcon />
+              {""}
+            </button>
+          </div>
 
           <div
             className={`mt-3 ${isSidebarCollapsed ? "hidden" : "block"} mb-5`}

@@ -8,6 +8,7 @@ import { Inventory } from "./inventory/page";
 import AuthScreen from "./login-register/page";
 import { Products } from "./products/page";
 import StoreProvider, { useAppSelector } from "./redux";
+import { Settings } from "./settings/page";
 
 const AppLayout = () => {
   const isSidebarCollapsed = useAppSelector(
@@ -59,6 +60,14 @@ const AppLayout = () => {
             element={
               <ProtectedRoute>
                 <Products />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
               </ProtectedRoute>
             }
           />

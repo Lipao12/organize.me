@@ -6,6 +6,7 @@ import { setIsDarkMode, setIsSidebarCollapsed } from "../../state";
 
 export const Navbar = () => {
   const dispatch = useAppDispatch();
+  const userName = localStorage.getItem("name");
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed
   );
@@ -33,7 +34,7 @@ export const Navbar = () => {
         </button>
 
         <div className="relative">
-          {/* Decidi o que fazer com essa barra de pesquisa */}
+          {/* Decidir o que fazer com essa barra de pesquisa */}
           <input
             type="search"
             placeholder="Start type to search groups & products"
@@ -61,7 +62,7 @@ export const Navbar = () => {
           <hr className="w-0 h-7 border border-solid border-l border-gray-300 mx-3" />
           <div className="flex items-center gap-3 cursor-pointer">
             <CircleUserRound size={30} />
-            <span className="font-semibold">Emrpesa 1</span>
+            <span className="font-semibold">{userName}</span>
           </div>
         </div>
       </div>

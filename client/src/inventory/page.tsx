@@ -15,7 +15,7 @@ const columns = [
 ];
 
 export const Inventory = () => {
-  const user_id = { user_id: "3b0fd66b-a4d6-4d95-94e4-01940c99aedb" };
+  const user_id = { user_id: localStorage.getItem("user_id") };
   const {
     data: products,
     isError,

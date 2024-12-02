@@ -13,7 +13,7 @@ class UserCreator:
             self.users_repository.create_user(user_info)
 
             return{
-                "body":{"id": user_id},
+                "body":{"id": user_id, "name": body.name},
                 "status_code":201
             }
         except Exception as exception:

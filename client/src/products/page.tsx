@@ -15,7 +15,7 @@ import { CreateProductModal } from "./modal_create_product";
 
 export const Products = () => {
   const [pagination, setPagination] = useState({
-    user_id: "3b0fd66b-a4d6-4d95-94e4-01940c99aedb",
+    user_id: localStorage.getItem("user_id"),
     page: 1,
     page_size: 12,
   });

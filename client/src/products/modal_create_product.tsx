@@ -20,7 +20,7 @@ export const CreateProductModal = ({
 
   const handleSubmit = () => {
     const newProduct = {
-      user_id: "3b0fd66b-a4d6-4d95-94e4-01940c99aedb",
+      user_id: localStorage.getItem("user_id"),
       name: name,
       price: Number(price),
       stock_quantity: Number(stockQuantity),

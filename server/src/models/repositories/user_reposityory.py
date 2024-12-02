@@ -36,7 +36,7 @@ class UsersRepository:
         cursor = self.conn.cursor()
         cursor.execute(
             '''
-            SELECT id, name, email, created_at FROM Users WHERE id = %s
+            SELECT name, email FROM Users WHERE id = %s
             ''', 
             (user_id,)
         )

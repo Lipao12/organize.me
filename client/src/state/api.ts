@@ -2,17 +2,24 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ExpenseByCategorySummary, ExpenseSummary, Product, PurchaseSummary, SalesSummary } from "../type/type";
 
 interface LoginResponse {
-  token: string; 
-  user: {
     id: string;
     name: string;
-    email: string;
-  };
 }
 
 interface LoginCredentials {
   email: string;
   password: string;
+}
+
+interface RegisterResponse {
+    id: string;
+    name: string;
+}
+
+interface RegisterCredentials {
+  email: string;
+  password: string;
+  name: string;
 }
 
 type AllProductsResponse = {
@@ -39,15 +46,29 @@ type DashboardMetrics = {
   expenseByCategorySummary: ExpenseByCategorySummary[];
 }
 
+interface UserResponse {
+  id: string;
+  name: string;
+  email: string;
+}
+
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
   reducerPath: "api",
-  tagTypes: ["DashboardMetrics", "Products", "Auth"],
+  tagTypes: ["DashboardMetrics", "Products", "Auth", "User"],
   endpoints: (build) => ({
     login: build.mutation<LoginResponse, LoginCredentials>({
       query: (credentials) => ({
         url: "/auth/login",
+        method: "POST",
+        body: credentials,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    register: build.mutation<RegisterResponse, RegisterCredentials>({
+      query: (credentials) => ({
+        url: "/auth/register",
         method: "POST",
         body: credentials,
       }),
@@ -65,7 +86,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Products"],
     }),
-    getAllProducts: build.query<AllProductsResponse, {user_id: string} | void>({
+    getAllProducts: build.query<AllProductsResponse, {user_id: string | null} | void>({
       query: (body) => ({
         url: "/products/all",
         method: "POST",
@@ -80,8 +101,23 @@ export const api = createApi({
         body: body,
       }),
       providesTags: ["Products"],
-    })
+    }),
+    getUser: build.query<UserResponse, string | void>({
+      query: (userId) => ({
+        url: `/users/${userId}/info`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+    updateUser: build.mutation<UserResponse, Partial<UserResponse>>({
+      query: (updatedUser) => ({
+        url: "/user",
+        method: "PUT",
+        body: updatedUser,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
-export const {useLoginMutation, useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, useCreateProductMutation} = api;
+export const {useLoginMutation, useRegisterMutation, useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, useCreateProductMutation, useGetUserQuery, useUpdateUserMutation} = api;

@@ -16,7 +16,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "../(components)/tabs/tabs";
-import { useLoginMutation } from "../state/api"; // Certifique-se de ajustar o caminho correto para o `useLoginMutation`.
+import { useLoginMutation, useRegisterMutation } from "../state/api";
 
 const AuthForm = ({
   type,
@@ -95,6 +95,7 @@ export default function AuthScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [login, { isLoading: loginLoading, isError, error }] =
     useLoginMutation();
+  const [register, _] = useRegisterMutation();
   const navigate = useNavigate();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -108,11 +109,33 @@ export default function AuthScreen() {
       const response = await login({ email, password }).unwrap();
       console.log("Login bem-sucedido:", response);
       localStorage.setItem("user_id", response.id);
-      localStorage.setItem("authToken", "token");
+      localStorage.setItem("name", response.name);
       navigate("/dashboard");
     } catch (err) {
       console.error("Erro no login:", err);
       alert("Credenciais inválidas. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const name = formData.get("name") as string;
+    console.log(email);
+    try {
+      setIsLoading(true);
+      const response = await register({ email, password, name }).unwrap();
+      console.log("Registro bem-sucedido:", response);
+      localStorage.setItem("user_id", response.id);
+      localStorage.setItem("name", response.name);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Erro no registro:", err);
+      alert("Erro ao registrar. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -147,7 +170,7 @@ export default function AuthScreen() {
               <AuthForm
                 type="register"
                 isLoading={isLoading}
-                onSubmit={handleLogin}
+                onSubmit={handleRegister}
               />
             </TabsContent>
           </Tabs>

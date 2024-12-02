@@ -11,7 +11,7 @@ if conn is None:
     exit(1)
 
 file_table_mapping = {
-    "users.json": "Users",
+    #"users.json": "Users",
     "products.json": "products",
     "sales.json": "Sales",
     "purchases.json": "Purchases",

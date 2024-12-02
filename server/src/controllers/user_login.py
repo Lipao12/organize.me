@@ -20,7 +20,7 @@ class UserLogin:
             return{
                 "body":{
                     "id":user_id,
-                    "name": name
+                    "name": name,
                 },
                 "status_code": 200
             }
