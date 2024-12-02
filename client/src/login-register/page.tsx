@@ -1,5 +1,6 @@
 "use client";
 
+import { Moon, Sun } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -16,6 +17,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "../(components)/tabs/tabs";
+import { useAppDispatch, useAppSelector } from "../redux";
+import { setIsDarkMode } from "../state";
 import { useLoginMutation, useRegisterMutation } from "../state/api";
 
 const AuthForm = ({
@@ -96,7 +99,9 @@ export default function AuthScreen() {
   const [login, { isLoading: loginLoading, isError, error }] =
     useLoginMutation();
   const [register, _] = useRegisterMutation();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -117,6 +122,10 @@ export default function AuthScreen() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const changeDarkMode = () => {
+    dispatch(setIsDarkMode(!isDarkMode));
   };
 
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -147,6 +156,20 @@ export default function AuthScreen() {
         <CardHeader>
           <CardTitle>Bem-vindo</CardTitle>
           <CardDescription>Faça login ou crie uma nova conta</CardDescription>
+          <button
+            onClick={() => {
+              changeDarkMode();
+            }}
+            type="button"
+            className="p-3 bg-gray-100 rounded-full hover:bg-blue-100 mb-4"
+          >
+            {""}
+            {isDarkMode ? (
+              <Sun className="cursor-pointer text-gray-500" size={24} />
+            ) : (
+              <Moon className="cursor-pointer text-gray-500" size={24} />
+            )}
+          </button>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
