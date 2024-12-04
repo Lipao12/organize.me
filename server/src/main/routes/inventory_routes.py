@@ -8,14 +8,19 @@ from src.controllers.product_creator import ProductsCreator
 from src.controllers.user_creator import UserCreator 
 from src.controllers.user_login import UserLogin
 from src.controllers.user_information import UserInformation 
+from src.controllers.dashboard_metrics import DashboardMetrics 
 
 # Importação de Repositorios
 from src.models.repositories.products_repository import ProductsRepository
 from src.models.repositories.user_reposityory import UsersRepository 
+from src.models.repositories.dashboard_repository import DashboardRepository 
 
 # Importação o gerente de conexões
 from src.models.settings.db_connection_handler import db_connection_handler
 
+##
+## ## AUTH
+##
 @inventory_bp.route("/auth/register", methods=["POST"])
 def create_user():
     conn = db_connection_handler.get_connection()
@@ -73,4 +78,16 @@ def find_all_products():
     controller = ProductsFinder(products_repository)
 
     response = controller.find_all_product(request.json)
+    return jsonify(response['body']), response['status_code']
+
+##
+## ## DASHBOARD
+##
+@inventory_bp.route("/metrics/products/popular", methods=["POST"])
+def find_popular_products():
+    conn = db_connection_handler.get_connection()
+    dashboard_repository = DashboardRepository(conn)
+    controller = DashboardMetrics(dashboard_repository)
+
+    response = controller.popular_product(request.json)
     return jsonify(response['body']), response['status_code']

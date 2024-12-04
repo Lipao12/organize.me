@@ -31,6 +31,10 @@ type ProductsResponse = {
   total: number;
 };
 
+type PopularProductsResponse = {
+  popular_products: Product[];
+};
+
 export interface NewProduct {
   name: string;
   price: number;
@@ -56,7 +60,7 @@ interface UserResponse {
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
   reducerPath: "api",
-  tagTypes: ["DashboardMetrics", "Products", "Auth", "User"],
+  tagTypes: ["DashboardMetrics", "Products", "Auth", "User", "Expenses"],
   endpoints: (build) => ({
     login: build.mutation<LoginResponse, LoginCredentials>({
       query: (credentials) => ({
@@ -117,7 +121,22 @@ export const api = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+    getExpensesByCategory: build.query<ExpenseByCategorySummary[], void>({
+      query: () => "/expenses",
+      providesTags: ["Expenses"],
+    }),
+    getPopularProducts: build.query<PopularProductsResponse, string | void | any>({
+      query: (body) => ({
+        url: "/metrics/products/popular",
+        method: "POST",
+        body: body,
+      }),
+      providesTags: ["Products"],
+    }),
   }),
 });
 
-export const {useLoginMutation, useRegisterMutation, useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, useCreateProductMutation, useGetUserQuery, useUpdateUserMutation} = api;
+export const {useLoginMutation, 
+  useRegisterMutation, useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, 
+  useCreateProductMutation, useGetUserQuery, useUpdateUserMutation, useGetExpensesByCategoryQuery,
+  useGetPopularProductsQuery, } = api;

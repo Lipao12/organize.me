@@ -106,7 +106,10 @@ export const Settings = () => {
                 <td className="py-2 px-4">{setting.label}</td>
                 <td className="py-2 px-4">
                   {setting.type === "toggle" ? (
-                    <label className="inline-flex relative items-center cursor-pointer">
+                    <label
+                      className="inline-flex relative items-center cursor-pointer"
+                      aria-label="label for the select"
+                    >
                       <input
                         type="checkbox"
                         className="sr-only peer"
@@ -123,7 +126,7 @@ export const Settings = () => {
                     </label>
                   ) : (
                     <>
-                      <label>
+                      <label aria-label="label for the select">
                         <input
                           type="text"
                           className="px-4 py-2 border rounded-lg text-gray-500 focus:outline-none focus:border-blue-500"

@@ -5,9 +5,10 @@ import {
   ChevronRight,
   PlusCircleIcon,
   Search,
-  Star,
 } from "lucide-react";
 import { useState } from "react";
+import { Loading } from "../(components)/loading";
+import { RenderStars } from "../(components)/rating";
 import { useAppSelector } from "../redux";
 import { useGetProductsQuery } from "../state/api";
 import { Product } from "../type/type";
@@ -54,31 +55,8 @@ export const Products = () => {
     setIsModalOpen(false);
   };
 
-  const renderStars = (rating: number) => {
-    const validRating = typeof rating === "number" ? rating : 0;
-    return Array.from({ length: 5 }).map((_, index) => (
-      <Star
-        key={index}
-        className={`h-4 w-4 ${
-          index < Math.round(validRating)
-            ? "text-yellow-400 fill-yellow-400"
-            : "text-gray-300"
-        }`}
-      />
-    ));
-  };
-
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div
-          className={`animate-spin rounded-full h-16 w-16 border-b-2 ${
-            isDarkMode ? "border-black" : "border-gray-800"
-          }`}
-        ></div>
-        <span className={`ml-4`}>Carregando dados...</span>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (isError || !products) {
@@ -168,7 +146,7 @@ export const Products = () => {
                   R$ {product.price.toFixed(2)}
                 </p>
                 <div className="flex items-center mb-2">
-                  {renderStars(product.rating)}
+                  {RenderStars(product.rating)}
                   <span className="ml-2 text-sm text-gray-600">
                     ({product.rating.toFixed(1)})
                   </span>
