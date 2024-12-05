@@ -18,7 +18,6 @@ const CardPopularProducts = () => {
         <Loading />
       ) : (
         <>
-          {console.log(popularProducts)}
           <h3 className="text-lg font-semibold px-7 pt-5 pb-2">
             Produtos Populares
           </h3>

@@ -1,4 +1,5 @@
 import { TrendingDown, TrendingUp } from "lucide-react";
+import numeral from "numeral";
 import {
   Area,
   AreaChart,
@@ -12,8 +13,10 @@ import { useGetPurchaseSummaryQuery } from "../state/api";
 
 const CardPurchaseSummary = () => {
   const user_id = { user_id: localStorage.getItem("user_id") };
-  const { data, isLoading } = useGetPurchaseSummaryQuery(user_id);
-  const purchaseData = data?.purchaseSummary || [];
+  //const { data, isLoading } = useGetPurchaseSummaryQuery(user_id);
+  const { data: purchaseMetrics, isLoading } =
+    useGetPurchaseSummaryQuery(user_id);
+  const purchaseData = purchaseMetrics?.purchase_summary || [];
 
   const lastDataPoint = purchaseData[purchaseData.length - 1] || null;
 
@@ -23,6 +26,7 @@ const CardPurchaseSummary = () => {
         <Loading />
       ) : (
         <>
+          {(console.log(purchaseData), console.log(lastDataPoint))}
           {/* HEADER */}
           <div>
             <h2 className="text-lg font-semibold mb-2 px-7 pt-5">
@@ -38,56 +42,70 @@ const CardPurchaseSummary = () => {
               <p className="text-xs text-gray-400">Vendas</p>
               <div className="flex items-center">
                 <p className="text-2xl font-bold">
-                  {lastDataPoint ? lastDataPoint.totalPurchased : "0"}
+                  {lastDataPoint
+                    ? numeral(lastDataPoint.total_purchased).format("R$ 0.00a")
+                    : "0"}
                 </p>
                 {lastDataPoint && (
                   <p
                     className={`text-sm ${
-                      lastDataPoint.changePercentage! >= 0
+                      lastDataPoint.change_percentage! >= 0
                         ? "text-green-500"
                         : "text-red-500"
                     } flex ml-3`}
                   >
-                    {lastDataPoint.changePercentage! >= 0 ? (
+                    {lastDataPoint.change_percentage! >= 0 ? (
                       <TrendingUp className="w-5 h-5 mr-1" />
                     ) : (
                       <TrendingDown className="w-5 h-5 mr-1" />
                     )}
-                    {Math.abs(lastDataPoint.changePercentage!)}%
+                    {Math.abs(lastDataPoint.change_percentage!)}%
                   </p>
                 )}
               </div>
             </div>
             {/* CHART */}
-            <ResponsiveContainer width="100%" height={200} className="p-2">
-              <AreaChart
-                data={purchaseData}
-                margin={{ top: 0, right: 0, left: -50, bottom: 45 }}
-              >
-                <XAxis dataKey="date" tick={false} axisLine={false} />
-                <YAxis tickLine={false} tick={false} axisLine={false} />
-                <Tooltip
-                  formatter={(value: number) => [
-                    `$${value.toLocaleString("en")}`,
-                  ]}
-                  labelFormatter={(label) => {
-                    const date = new Date(label);
-                    return date.toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    });
-                  }}
-                />
-                <Area
-                  type="linear"
-                  dataKey="totalPurchased"
-                  stroke="#8884d8"
-                  fill="#8884d8"
-                  dot={true}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="text-gray-950 ">
+              <ResponsiveContainer width="100%" height={200} className="p-2">
+                <AreaChart
+                  data={purchaseData}
+                  margin={{ top: 0, right: 0, left: -50, bottom: 45 }}
+                >
+                  <XAxis
+                    dataKey="date"
+                    tickFormatter={(date) => {
+                      const parsedDate = new Date(date);
+                      return parsedDate.toLocaleDateString("pt-BR", {
+                        month: "short",
+                      });
+                    }}
+                    tick={false}
+                    axisLine={false}
+                  />
+                  <YAxis tickLine={false} tick={false} axisLine={false} />
+                  <Tooltip
+                    formatter={(value: number) => [
+                      `R$ ${value.toLocaleString("pt-BR")}`,
+                    ]}
+                    labelFormatter={(label) => {
+                      const date = new Date(label);
+                      return date.toLocaleDateString("pt-BR", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      });
+                    }}
+                  />
+                  <Area
+                    type="linear"
+                    dataKey="total_purchased"
+                    stroke="#8884d8"
+                    fill="#8884d8"
+                    dot={true}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </>
       )}

@@ -63,3 +63,17 @@ class DashboardRepository:
             "total_expenses": total_expenses,
             "expenses_by_category": expenses_by_category
         }
+    
+    def get_purchase_summary(self, user_id: str):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            '''
+            SELECT purchaseSummaryId, totalPurchased, changePercentage, date 
+            FROM PurchaseSummary 
+            WHERE user_id = %s
+            ORDER BY date ASC
+            ''',
+            (user_id,)
+        )
+        purchase = cursor.fetchall()
+        return purchase

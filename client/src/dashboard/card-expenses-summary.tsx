@@ -1,4 +1,5 @@
 import { TrendingUp } from "lucide-react";
+import numeral from "numeral";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { Loading } from "../(components)/loading";
 import { useGetSummaryExpensesQuery } from "../state/api";
@@ -15,7 +16,6 @@ const CardExpenseSummary = () => {
     useGetSummaryExpensesQuery(user_id);
 
   const expenseSummary = expensesMetrics?.total_expenses;
-  console.log(expensesMetrics);
   const expenseByCategorySummary = expensesMetrics?.expenses_by_category || [];
 
   const expenseSums = expenseByCategorySummary.reduce(
@@ -40,7 +40,7 @@ const CardExpenseSummary = () => {
     (acc, category: { value: number }) => acc + category.value,
     0
   );
-  console.log(totalExpenses);
+
   const formattedTotalExpenses = totalExpenses.toFixed(2);
 
   return (
@@ -83,7 +83,7 @@ const CardExpenseSummary = () => {
               </ResponsiveContainer>
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center basis-2/5">
                 <span className="font-bold text-xl">
-                  R$ {formattedTotalExpenses}
+                  R$ {numeral(formattedTotalExpenses).format("R$ 0.00a")}
                 </span>
               </div>
             </div>

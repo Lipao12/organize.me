@@ -109,3 +109,39 @@ class DashboardMetrics:
                 },
                 "status_code": 500
             }
+        
+    def purchase_summary(self, user_id: str) -> Dict:
+        if not user_id:
+            return {
+                "body": {"error": f"User not found."},
+                "status_code": 400
+            }
+        try:
+            purchase_data = self.dashboard_repository.get_purchase_summary(user_id["user_id"])
+            if not purchase_data:
+                return {
+                    "body": {"message": "No purchase summary found for the user."},
+                    "status_code": 404
+                }
+            
+            purchase_summary = [
+                            {
+                                "purchase_id": purchase[0],
+                                "total_purchased": float(purchase[1]),
+                                "change_percentage": float(purchase[2]),
+                                "date": purchase[3].strftime('%Y-%m-%d')
+                            }
+                for purchase in purchase_data
+            ]
+            print(purchase_summary)
+
+            return {
+                "body": {"purchase_summary": purchase_summary},
+                "status_code": 200
+            }
+
+        except Exception as e:
+            return {
+                "body": {"error": "An unexpected error occurred.", "message": str(e)},
+                "status_code": 500
+            }

@@ -14,9 +14,9 @@ export type Product = {
   }
 
   export type PurchaseSummary = {
-    purchaseSummaryId: string;
-    totalPurchased: number;
-    changePercentage?: number;
+    purchase_id: string;
+    total_purchased: number;
+    change_percentage?: number;
     date: string;
   }
   

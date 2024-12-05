@@ -92,11 +92,20 @@ def find_popular_products():
     response = controller.popular_product(request.json)
     return jsonify(response['body']), response['status_code']
 
-@inventory_bp.route("/metrics/expenses", methods=["POST"])
+@inventory_bp.route("/metrics/expenses/summary", methods=["POST"])
 def find_expenses_summary():
     conn = db_connection_handler.get_connection()
     dashboard_repository = DashboardRepository(conn)
     controller = DashboardMetrics(dashboard_repository)
 
     response = controller.expenses_summary(request.json)
+    return jsonify(response['body']), response['status_code']
+
+@inventory_bp.route("/metrics/purchase/summary", methods=["POST"])
+def find_purchase_summary():
+    conn = db_connection_handler.get_connection()
+    dashboard_repository = DashboardRepository(conn)
+    controller = DashboardMetrics(dashboard_repository)
+
+    response = controller.purchase_summary(request.json)
     return jsonify(response['body']), response['status_code']

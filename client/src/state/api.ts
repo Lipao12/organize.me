@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ExpenseByCategorySummary, Product } from "../type/type";
+import { ExpenseByCategorySummary, Product, PurchaseSummary } from "../type/type";
 
 interface LoginResponse {
     id: string;
@@ -35,7 +35,7 @@ type PopularProductsResponse = {
   popular_products: Product[];
 };
 
-type ExpensesSummary = {
+type ExpensesSummaryResponse = {
   total_expenses: {
     total_expenses: number,
     date: string
@@ -45,6 +45,10 @@ type ExpensesSummary = {
     total_amount: number,
     date: string
   }
+}
+
+type PurchaseSummaryResponse = {
+  purchase_summary : PurchaseSummary[]
 }
 
 export interface NewProduct {
@@ -64,7 +68,7 @@ interface UserResponse {
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
   reducerPath: "api",
-  tagTypes: ["DashboardMetrics", "Products", "Auth", "User", "Expenses"],
+  tagTypes: ["DashboardMetrics", "Products", "Auth", "User", "Expenses", "Purchase", "Sales"],
   endpoints: (build) => ({
     login: build.mutation<LoginResponse, LoginCredentials>({
       query: (credentials) => ({
@@ -125,23 +129,23 @@ export const api = createApi({
       query: () => "/expenses",
       providesTags: ["Expenses"],
     }),
-    getSummaryExpenses: build.query<ExpensesSummary, string | void | any>({
+    getSummaryExpenses: build.query<ExpensesSummaryResponse, string | void | any>({
       query: (body) => ({
-        url: "/metrics/expenses",
+        url: "/metrics/expenses/summary",
         method: "POST",
         body: body,
       }),
       providesTags: ["Expenses"],
     }),
-    getPurchaseSummary: build.query<ExpensesSummary, string | void | any>({
+    getPurchaseSummary: build.query<PurchaseSummaryResponse, string | void | any>({
       query: (body) => ({
         url: "/metrics/purchase/summary",
         method: "POST",
         body: body,
       }),
-      providesTags: ["Expenses"],
+      providesTags: ["Purchase"],
     }),
-    getSalesSummary: build.query<ExpensesSummary, string | void | any>({
+    getSalesSummary: build.query<ExpensesSummaryResponse, string | void | any>({
       query: (body) => ({
         url: "/metrics/sales/summary",
         method: "POST",
