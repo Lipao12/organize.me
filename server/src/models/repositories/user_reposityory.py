@@ -16,21 +16,25 @@ class UsersRepository:
         hashed_password = bcrypt.hashpw(users_info["password"].encode('utf-8'), salt)
         
         cursor = self.conn.cursor()
-        cursor.execute(
-            '''
-            INSERT INTO Users
-                (id, name, email, password)
-            VALUES
-                (%s, %s, %s, %s)
-            ''',
-            (
-                users_info["id"],
-                users_info["name"],
-                users_info["email"],
-                hashed_password.decode('utf-8'),
+        try:
+            cursor.execute(
+                '''
+                INSERT INTO Users (id, name, email, password)
+                VALUES (%s, %s, %s, %s)
+                ''',
+                (
+                    users_info["id"],
+                    users_info["name"],
+                    users_info["email"],
+                    hashed_password.decode('utf-8')
+                )
             )
-        )
-        self.conn.commit()
+            self.conn.commit()
+        except Exception as e:
+            self.conn.rollback()
+            raise Exception(f"Error while creating user: {str(e)}")
+        finally:
+            cursor.close()
 
     def find_user_by_id(self, user_id: str) -> Optional[Tuple]:
         cursor = self.conn.cursor()

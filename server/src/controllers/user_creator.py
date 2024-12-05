@@ -7,13 +7,15 @@ class UserCreator:
 
     def create(self, body)->Dict:
         try:
+            if not isinstance(body, dict):
+                raise ValueError("Body must be a dictionary.")
+            
             user_id = str(uuid.uuid4())
             user_info = {**body, "id":user_id}
-
             self.users_repository.create_user(user_info)
 
             return{
-                "body":{"id": user_id, "name": body.name},
+                "body":{"id": user_id, "name": body["name"]},
                 "status_code":201
             }
         except Exception as exception:
