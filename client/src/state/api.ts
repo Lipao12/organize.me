@@ -35,6 +35,18 @@ type PopularProductsResponse = {
   popular_products: Product[];
 };
 
+type ExpensesSummary = {
+  total_expenses: {
+    total_expenses: number,
+    date: string
+  },
+  expenses_by_category:{
+    category: string,
+    total_amount: number,
+    date: string
+  }
+}
+
 export interface NewProduct {
   name: string;
   price: number;
@@ -125,6 +137,14 @@ export const api = createApi({
       query: () => "/expenses",
       providesTags: ["Expenses"],
     }),
+    getSummaryExpenses: build.query<ExpensesSummary, string | void | any>({
+      query: (body) => ({
+        url: "/metrics/expenses",
+        method: "POST",
+        body: body,
+      }),
+      providesTags: ["Expenses"],
+    }),
     getPopularProducts: build.query<PopularProductsResponse, string | void | any>({
       query: (body) => ({
         url: "/metrics/products/popular",
@@ -139,4 +159,4 @@ export const api = createApi({
 export const {useLoginMutation, 
   useRegisterMutation, useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, 
   useCreateProductMutation, useGetUserQuery, useUpdateUserMutation, useGetExpensesByCategoryQuery,
-  useGetPopularProductsQuery, } = api;
+  useGetPopularProductsQuery, useGetSummaryExpensesQuery} = api;

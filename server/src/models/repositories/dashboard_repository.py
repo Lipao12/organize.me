@@ -24,4 +24,42 @@ class DashboardRepository:
         products = cursor.fetchall()
         return products
 
-    
+    def get_expenses_summary(self, user_id: str):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            '''
+            SELECT 
+                COALESCE(SUM(amount), 0) AS total_expenses, 
+                CURRENT_DATE AS date 
+            FROM 
+                Expenses 
+            WHERE 
+                user_id = %s
+            GROUP BY 
+                CURRENT_DATE;
+            ''',
+            (user_id,)
+        )
+        total_expenses = cursor.fetchone()
+
+        cursor.execute(
+            '''
+            SELECT 
+                category, 
+                COALESCE(SUM(amount), 0) AS total_amount, 
+                CURRENT_DATE AS date 
+            FROM 
+                Expenses 
+            WHERE 
+                user_id = %s
+            GROUP BY 
+                category, CURRENT_DATE;
+            ''',
+            (user_id,)
+        )
+        expenses_by_category = cursor.fetchall() 
+
+        return {
+            "total_expenses": total_expenses,
+            "expenses_by_category": expenses_by_category
+        }
