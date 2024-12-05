@@ -103,12 +103,16 @@ export default function AuthScreen() {
   const navigate = useNavigate();
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
+  const changeDarkMode = () => {
+    console.log("Ola");
+    dispatch(setIsDarkMode(!isDarkMode));
+  };
+
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    console.log(email);
     try {
       setIsLoading(true);
       const response = await login({ email, password }).unwrap();
@@ -122,10 +126,6 @@ export default function AuthScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const changeDarkMode = () => {
-    dispatch(setIsDarkMode(!isDarkMode));
   };
 
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -173,7 +173,7 @@ export default function AuthScreen() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="py-1 px-1 grid w-full grid-cols-2 rounded-[10px] bg-zinc-200 my-3 gap-x-1">
+            <TabsList className="py-1 px-1 grid w-full grid-cols-2 rounded-[10px] bg-zinc-200 my-3 gap-x-1 text-zinc-600">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="register">Registrar</TabsTrigger>
             </TabsList>

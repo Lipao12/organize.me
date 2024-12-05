@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useState } from "react";
+import { Loading } from "../(components)/loading";
 import { useAppSelector } from "../redux";
 import { useGetAllProductsQuery } from "../state/api";
 import { Product } from "../type/type";
@@ -26,16 +27,7 @@ export const Inventory = () => {
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div
-          className={`animate-spin rounded-full h-16 w-16 border-b-2 ${
-            isDarkMode ? "border-black" : "border-gray-800"
-          }`}
-        ></div>
-        <span className={`ml-4`}>Carregando dados...</span>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (isError || !products) {
