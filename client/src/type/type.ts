@@ -8,8 +8,8 @@ export type Product = {
 
   export type SalesSummary = {
     salesSummaryId: string;
-    totalValue: number;
-    changePercentage?: number;
+    total_saled: number;
+    change_percentage ?: number;
     date: string;
   }
 

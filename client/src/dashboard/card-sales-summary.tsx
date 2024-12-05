@@ -14,25 +14,30 @@ import { useGetSalesSummaryQuery } from "../state/api";
 
 const CardSalesSummary = () => {
   const user_id = { user_id: localStorage.getItem("user_id") };
-  const { data, isLoading, isError } = useGetSalesSummaryQuery(user_id);
-  const salesData = data?.salesSummary || [];
+  const {
+    data: salesMetrics,
+    isLoading,
+    isError,
+  } = useGetSalesSummaryQuery(user_id);
+  console.log(salesMetrics);
+  const salesData = salesMetrics?.sales_summary || [];
 
   const [timeframe, setTimeframe] = useState("weekly");
 
   const totalValueSum =
-    salesData.reduce((acc, curr) => acc + curr.totalValue, 0) || 0;
+    salesData.reduce((acc, curr) => acc + curr.total_saled, 0) || 0;
 
   const averageChangePercentage =
     salesData.reduce((acc, curr, _, array) => {
-      return acc + curr.changePercentage! / array.length;
+      return acc + curr.change_percentage! / array.length;
     }, 0) || 0;
 
   const highestValueData = salesData.reduce((acc, curr) => {
-    return acc.totalValue > curr.totalValue ? acc : curr;
+    return acc.total_saled > curr.total_saled ? acc : curr;
   }, salesData[0] || {});
 
   const highestValueDate = highestValueData.date
-    ? new Date(highestValueData.date).toLocaleDateString("en-US", {
+    ? new Date(highestValueData.date).toLocaleDateString("pt-BR", {
         month: "numeric",
         day: "numeric",
         year: "2-digit",
@@ -64,8 +69,8 @@ const CardSalesSummary = () => {
               <div className="text-lg font-medium">
                 <p className="text-xs text-gray-400">Valor</p>
                 <span className="text-2xl font-extrabold">
-                  $
-                  {(totalValueSum / 1000000).toLocaleString("en", {
+                  R$
+                  {(totalValueSum / 1000000).toLocaleString("pt", {
                     maximumFractionDigits: 2,
                   })}
                   m
@@ -89,48 +94,50 @@ const CardSalesSummary = () => {
               </select>
             </div>
             {/* CHART */}
-            <ResponsiveContainer width="100%" height={350} className="px-7">
-              <BarChart
-                data={salesData}
-                margin={{ top: 0, right: 0, left: -25, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tickFormatter={(value) => {
-                    const date = new Date(value);
-                    return `${date.getMonth() + 1}/${date.getDate()}`;
-                  }}
-                />
-                <YAxis
-                  tickFormatter={(value) => {
-                    return `$${(value / 1000000).toFixed(0)}m`;
-                  }}
-                  tick={{ fontSize: 12, dx: -1 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <Tooltip
-                  formatter={(value: number) => [
-                    `$${value.toLocaleString("en")}`,
-                  ]}
-                  labelFormatter={(label) => {
-                    const date = new Date(label);
-                    return date.toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    });
-                  }}
-                />
-                <Bar
-                  dataKey="totalValue"
-                  fill="#3182ce"
-                  barSize={10}
-                  radius={[10, 10, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="text-gray-950 ">
+              <ResponsiveContainer width="100%" height={350} className="px-7">
+                <BarChart
+                  data={salesData}
+                  margin={{ top: 0, right: 0, left: -25, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tickFormatter={(value) => {
+                      const date = new Date(value);
+                      return `${date.getMonth() + 1}/${date.getDate()}`;
+                    }}
+                  />
+                  <YAxis
+                    tickFormatter={(value) => {
+                      return `R$ ${(value / 1000000).toFixed(0)}m`;
+                    }}
+                    tick={{ fontSize: 12, dx: -1 }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip
+                    formatter={(value: number) => [
+                      `R$ ${value.toLocaleString("pt")}`,
+                    ]}
+                    labelFormatter={(label) => {
+                      const date = new Date(label);
+                      return date.toLocaleDateString("pt-BR", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      });
+                    }}
+                  />
+                  <Bar
+                    dataKey="total_saled"
+                    fill="#3182ce"
+                    barSize={10}
+                    radius={[10, 10, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
           {/* FOOTER */}

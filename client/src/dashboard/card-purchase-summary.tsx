@@ -1,5 +1,4 @@
 import { TrendingDown, TrendingUp } from "lucide-react";
-import numeral from "numeral";
 import {
   Area,
   AreaChart,
@@ -26,7 +25,6 @@ const CardPurchaseSummary = () => {
         <Loading />
       ) : (
         <>
-          {(console.log(purchaseData), console.log(lastDataPoint))}
           {/* HEADER */}
           <div>
             <h2 className="text-lg font-semibold mb-2 px-7 pt-5">
@@ -43,7 +41,14 @@ const CardPurchaseSummary = () => {
               <div className="flex items-center">
                 <p className="text-2xl font-bold">
                   {lastDataPoint
-                    ? numeral(lastDataPoint.total_purchased).format("R$ 0.00a")
+                    ? `R$
+                  ${(lastDataPoint.total_purchased / 1000000).toLocaleString(
+                    "pt",
+                    {
+                      maximumFractionDigits: 2,
+                    }
+                  )}
+                  m`
                     : "0"}
                 </p>
                 {lastDataPoint && (

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ExpenseByCategorySummary, Product, PurchaseSummary } from "../type/type";
+import { ExpenseByCategorySummary, Product, PurchaseSummary, SalesSummary } from "../type/type";
 
 interface LoginResponse {
     id: string;
@@ -49,6 +49,10 @@ type ExpensesSummaryResponse = {
 
 type PurchaseSummaryResponse = {
   purchase_summary : PurchaseSummary[]
+}
+
+type SalesSummaryResponse = {
+  sales_summary : SalesSummary[]
 }
 
 export interface NewProduct {
@@ -145,7 +149,7 @@ export const api = createApi({
       }),
       providesTags: ["Purchase"],
     }),
-    getSalesSummary: build.query<ExpensesSummaryResponse, string | void | any>({
+    getSalesSummary: build.query<SalesSummaryResponse, string | void | any>({
       query: (body) => ({
         url: "/metrics/sales/summary",
         method: "POST",

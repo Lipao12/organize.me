@@ -60,8 +60,6 @@ class DashboardMetrics:
                 for category, amount, date in expenses_data["expenses_by_category"]
             ]
 
-            print(total_expenses, expenses_by_category)
-
             return {
                 "body": {
                     "total_expenses": total_expenses,
@@ -133,10 +131,44 @@ class DashboardMetrics:
                             }
                 for purchase in purchase_data
             ]
-            print(purchase_summary)
-
             return {
                 "body": {"purchase_summary": purchase_summary},
+                "status_code": 200
+            }
+
+        except Exception as e:
+            return {
+                "body": {"error": "An unexpected error occurred.", "message": str(e)},
+                "status_code": 500
+            }
+        
+    def sales_summary(self, user_id: str) -> Dict:
+        if not user_id:
+            return {
+                "body": {"error": f"User not found."},
+                "status_code": 400
+            }
+        try:
+            sale_data = self.dashboard_repository.get_sales_summary(user_id["user_id"])
+            if not sale_data:
+                return {
+                    "body": {"message": "No sale summary found for the user."},
+                    "status_code": 404
+                }
+            
+            sales_summary = [
+                            {
+                                "sale_id": sale[0],
+                                "total_saled": float(sale[1]),
+                                "change_percentage": float(sale[2]),
+                                "date": sale[3].strftime('%Y-%m-%d')
+                            }
+                for sale in sale_data
+            ]
+            print(sales_summary)
+
+            return {
+                "body": {"sales_summary": sales_summary},
                 "status_code": 200
             }
 

@@ -77,3 +77,17 @@ class DashboardRepository:
         )
         purchase = cursor.fetchall()
         return purchase
+    
+    def get_sales_summary(self, user_id: str):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            '''
+            SELECT salesSummaryId, totalValue, changePercentage, date 
+            FROM SalesSummary 
+            WHERE user_id = %s
+            ORDER BY date ASC
+            ''',
+            (user_id,)
+        )
+        purchase = cursor.fetchall()
+        return purchase

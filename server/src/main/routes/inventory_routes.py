@@ -109,3 +109,12 @@ def find_purchase_summary():
 
     response = controller.purchase_summary(request.json)
     return jsonify(response['body']), response['status_code']
+
+@inventory_bp.route("/metrics/sales/summary", methods=["POST"])
+def find_sales_summary():
+    conn = db_connection_handler.get_connection()
+    dashboard_repository = DashboardRepository(conn)
+    controller = DashboardMetrics(dashboard_repository)
+
+    response = controller.sales_summary(request.json)
+    return jsonify(response['body']), response['status_code']
