@@ -10,10 +10,11 @@ import {
   YAxis,
 } from "recharts";
 import { Loading } from "../(components)/loading";
-import { useGetDashboardMetricsQuery } from "../state/api";
+import { useGetSalesSummaryQuery } from "../state/api";
 
 const CardSalesSummary = () => {
-  const { data, isLoading, isError } = useGetDashboardMetricsQuery();
+  const user_id = { user_id: localStorage.getItem("user_id") };
+  const { data, isLoading, isError } = useGetSalesSummaryQuery(user_id);
   const salesData = data?.salesSummary || [];
 
   const [timeframe, setTimeframe] = useState("weekly");

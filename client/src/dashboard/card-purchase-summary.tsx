@@ -8,10 +8,11 @@ import {
   YAxis,
 } from "recharts";
 import { Loading } from "../(components)/loading";
-import { useGetDashboardMetricsQuery } from "../state/api";
+import { useGetPurchaseSummaryQuery } from "../state/api";
 
 const CardPurchaseSummary = () => {
-  const { data, isLoading } = useGetDashboardMetricsQuery();
+  const user_id = { user_id: localStorage.getItem("user_id") };
+  const { data, isLoading } = useGetPurchaseSummaryQuery(user_id);
   const purchaseData = data?.purchaseSummary || [];
 
   const lastDataPoint = purchaseData[purchaseData.length - 1] || null;

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ExpenseByCategorySummary, ExpenseSummary, Product, PurchaseSummary, SalesSummary } from "../type/type";
+import { ExpenseByCategorySummary, Product } from "../type/type";
 
 interface LoginResponse {
     id: string;
@@ -54,14 +54,6 @@ export interface NewProduct {
   stock_quantity: number;
 }
 
-type DashboardMetrics = {
-  popularProducts: Product[];
-  salesSummary: SalesSummary[];
-  purchaseSummary: PurchaseSummary[];
-  expenseSummary: ExpenseSummary[];
-  expenseByCategorySummary: ExpenseByCategorySummary[];
-}
-
 interface UserResponse {
   id: string;
   name: string;
@@ -89,10 +81,6 @@ export const api = createApi({
         body: credentials,
       }),
       invalidatesTags: ["Auth"],
-    }),
-    getDashboardMetrics: build.query<DashboardMetrics, void>({
-      query: () => "/dashboard",
-      providesTags: ["DashboardMetrics"],
     }),
     createProduct: build.mutation<Product, NewProduct>({
       query: (newProduct) => ({
@@ -145,6 +133,22 @@ export const api = createApi({
       }),
       providesTags: ["Expenses"],
     }),
+    getPurchaseSummary: build.query<ExpensesSummary, string | void | any>({
+      query: (body) => ({
+        url: "/metrics/purchase/summary",
+        method: "POST",
+        body: body,
+      }),
+      providesTags: ["Expenses"],
+    }),
+    getSalesSummary: build.query<ExpensesSummary, string | void | any>({
+      query: (body) => ({
+        url: "/metrics/sales/summary",
+        method: "POST",
+        body: body,
+      }),
+      providesTags: ["Expenses"],
+    }),
     getPopularProducts: build.query<PopularProductsResponse, string | void | any>({
       query: (body) => ({
         url: "/metrics/products/popular",
@@ -157,6 +161,6 @@ export const api = createApi({
 });
 
 export const {useLoginMutation, 
-  useRegisterMutation, useGetDashboardMetricsQuery, useGetProductsQuery, useGetAllProductsQuery, 
+  useRegisterMutation, useGetProductsQuery, useGetAllProductsQuery, 
   useCreateProductMutation, useGetUserQuery, useUpdateUserMutation, useGetExpensesByCategoryQuery,
-  useGetPopularProductsQuery, useGetSummaryExpensesQuery} = api;
+  useGetPopularProductsQuery, useGetSummaryExpensesQuery, useGetPurchaseSummaryQuery, useGetSalesSummaryQuery} = api;
