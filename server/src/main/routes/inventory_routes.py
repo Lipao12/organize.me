@@ -9,11 +9,14 @@ from src.controllers.user_creator import UserCreator
 from src.controllers.user_login import UserLogin
 from src.controllers.user_information import UserInformation 
 from src.controllers.dashboard_metrics import DashboardMetrics 
+from src.controllers.customers_creator import CustomersCreator 
+from src.controllers.customer_finder import CustomerFinder 
 
 # Importação de Repositorios
 from src.models.repositories.products_repository import ProductsRepository
 from src.models.repositories.user_reposityory import UsersRepository 
 from src.models.repositories.dashboard_repository import DashboardRepository 
+from src.models.repositories.customers_repository import CustomersRepository
 
 # Importação o gerente de conexões
 from src.models.settings.db_connection_handler import db_connection_handler
@@ -117,4 +120,26 @@ def find_sales_summary():
     controller = DashboardMetrics(dashboard_repository)
 
     response = controller.sales_summary(request.json)
+    return jsonify(response['body']), response['status_code']
+
+##
+## ## CUSTOMERS
+##
+
+@inventory_bp.route("/customers/all", methods=["POST"])
+def find_all_customers():
+    conn = db_connection_handler.get_connection()
+    customers_repository = CustomersRepository(conn)
+    controller = CustomerFinder(customers_repository)
+
+    response = controller.find_all_product(request.json)
+    return jsonify(response['body']), response['status_code']
+
+@inventory_bp.route("/customers/create", methods=["POST"])
+def create_customers():
+    conn = db_connection_handler.get_connection()
+    customers_repository = CustomersRepository(conn)
+    controller = CustomersCreator(customers_repository)
+
+    response = controller.create_new_customers(request.json)
     return jsonify(response['body']), response['status_code']

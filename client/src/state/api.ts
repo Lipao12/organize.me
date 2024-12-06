@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ExpenseByCategorySummary, Product, PurchaseSummary, SalesSummary } from "../type/type";
+import { Customer, ExpenseByCategorySummary, Product, PurchaseSummary, SalesSummary } from "../type/type";
 
 interface LoginResponse {
     id: string;
@@ -35,6 +35,10 @@ type PopularProductsResponse = {
   popular_products: Product[];
 };
 
+type CustomersResponse = {
+  customers: Customer[];
+};
+
 type ExpensesSummaryResponse = {
   total_expenses: {
     total_expenses: number,
@@ -62,6 +66,12 @@ export interface NewProduct {
   stock_quantity: number;
 }
 
+export interface NewCutomers {
+  name: string;
+  email?: string;
+  phone?: string;
+}
+
 interface UserResponse {
   id: string;
   name: string;
@@ -72,7 +82,7 @@ interface UserResponse {
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
   reducerPath: "api",
-  tagTypes: ["DashboardMetrics", "Products", "Auth", "User", "Expenses", "Purchase", "Sales"],
+  tagTypes: ["DashboardMetrics", "Products", "Auth", "User", "Expenses", "Purchase", "Sales", "Cutomers"],
   endpoints: (build) => ({
     login: build.mutation<LoginResponse, LoginCredentials>({
       query: (credentials) => ({
@@ -97,6 +107,14 @@ export const api = createApi({
         body: newProduct,
       }),
       invalidatesTags: ["Products"],
+    }),
+    createCutomer: build.mutation<Customer, NewCutomers>({
+      query: (newCutomers) => ({
+        url: "/customers/create",
+        method: "POST",
+        body: newCutomers,
+      }),
+      invalidatesTags: ["Cutomers"],
     }),
     getAllProducts: build.query<AllProductsResponse, {user_id: string | null} | void>({
       query: (body) => ({
@@ -165,10 +183,19 @@ export const api = createApi({
       }),
       providesTags: ["Products"],
     }),
+    getAllCustomers: build.query<CustomersResponse, string | void | any>({
+      query: (body) => ({
+        url: "/customers/all",
+        method: "POST",
+        body: body,
+      }),
+      providesTags: ["Cutomers"],
+    }),
   }),
 });
 
 export const {useLoginMutation, 
   useRegisterMutation, useGetProductsQuery, useGetAllProductsQuery, 
   useCreateProductMutation, useGetUserQuery, useUpdateUserMutation, useGetExpensesByCategoryQuery,
-  useGetPopularProductsQuery, useGetSummaryExpensesQuery, useGetPurchaseSummaryQuery, useGetSalesSummaryQuery} = api;
+  useGetPopularProductsQuery, useGetSummaryExpensesQuery, useGetPurchaseSummaryQuery, useGetSalesSummaryQuery,
+  useGetAllCustomersQuery, useCreateCutomerMutation} = api;

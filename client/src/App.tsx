@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"; // Use BrowserR
 import { Navbar } from "./(components)/navbar";
 import ProtectedRoute from "./(components)/protected-route/protected-route";
 import { Sidebar } from "./(components)/sidebar";
+import { CustomerList } from "./customers/page";
 import { Dashboard } from "./dashboard/page";
 import { Inventory } from "./inventory/page";
 import AuthScreen from "./login-register/page";
@@ -60,6 +61,14 @@ const AppLayout = () => {
             element={
               <ProtectedRoute>
                 <Products />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/customers"
+            element={
+              <ProtectedRoute>
+                <CustomerList />
               </ProtectedRoute>
             }
           />

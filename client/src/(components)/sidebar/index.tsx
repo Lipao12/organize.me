@@ -93,7 +93,7 @@ export const Sidebar = () => {
             isCollapsed={isSidebarCollapsed}
           />
           <SidebarLink
-            href="/clients"
+            href="/customers"
             icon={Users}
             label="Clientes"
             isCollapsed={isSidebarCollapsed}

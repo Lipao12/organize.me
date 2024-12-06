@@ -58,8 +58,8 @@ export const Products = () => {
   if (isLoading) {
     return <Loading />;
   }
-
-  if (isError || !products) {
+  console.log(products, isError);
+  if (isError) {
     return (
       <div className="text-center text-red-500 py-4">
         Failed to fetch products
@@ -161,7 +161,7 @@ export const Products = () => {
       )}
 
       {/* PAGINATION */}
-      {products && (
+      {products && products?.products.length != 0 && (
         <div className="flex flex-col sm:flex-row justify-between items-center mt-8 space-y-4 sm:space-y-0">
           <button
             onClick={handlePreviousPage}

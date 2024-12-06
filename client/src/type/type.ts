@@ -33,3 +33,9 @@ export type Product = {
     date: string;
   }
   
+  export type Customer = {
+    customers_id: string;
+    email?: string;
+    name: string;
+    phone?: string;
+  }

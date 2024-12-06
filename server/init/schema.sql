@@ -88,6 +88,17 @@ CREATE TABLE PurchaseSummary (
     CONSTRAINT fk_purchase_summary_user FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
 );
 
+CREATE TABLE Customers (
+    customer_id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_customers_user FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+);
+
+
 -- Índices
 CREATE INDEX idx_user_id_products ON Products (user_id);
 CREATE INDEX idx_product_name ON Products (name);

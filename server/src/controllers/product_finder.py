@@ -27,10 +27,11 @@ class ProductsFinder:
                 }
             
             products, total = self.products_repository.find_products_paginated(user_id, page, page_size)
+
             if not products:
                 return {
-                    "body": {"message": "No products found for the specified user."},
-                    "status_code": 404
+                    "body": {"products": []},
+                    "status_code": 200
                 }
             formatted_products = [
                 {
@@ -65,8 +66,8 @@ class ProductsFinder:
             products = self.products_repository.find_all_products(user_id)
             if not products:
                 return {
-                    "body": {"message": "No products found for the specified user."},
-                    "status_code": 404
+                    "body": {"products": []},
+                    "status_code": 200
                 }
             
             formatted_products = [
