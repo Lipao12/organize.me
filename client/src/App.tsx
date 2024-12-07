@@ -10,6 +10,7 @@ import AuthScreen from "./login-register/page";
 import { Products } from "./products/page";
 import { CustomerDetails } from "./purchase-history/page";
 import StoreProvider, { useAppSelector } from "./redux";
+import { SalesPage } from "./sales/page";
 import { Settings } from "./settings/page";
 
 const AppLayout = () => {
@@ -41,6 +42,14 @@ const AppLayout = () => {
       >
         <Navbar />
         <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
@@ -78,6 +87,14 @@ const AppLayout = () => {
             element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sales"
+            element={
+              <ProtectedRoute>
+                <SalesPage />
               </ProtectedRoute>
             }
           />
