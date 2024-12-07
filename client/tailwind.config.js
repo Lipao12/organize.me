@@ -38,7 +38,7 @@ const generateThemeObject = (colors, mapping, invert = false) => {
   return theme;
 };
 
-const lightTheme = generateThemeObject(colors, shadeMapping);
+const lightTheme = generateThemeObject(colors, shadeMapping,);
 const darkTheme = generateThemeObject(colors, shadeMapping, true);
 
 const themes = {
@@ -60,6 +60,7 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    extend: {}, 
   },
   plugins: [createThemes(themes)],
 }

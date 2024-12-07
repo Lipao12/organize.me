@@ -11,6 +11,7 @@ from src.controllers.user_information import UserInformation
 from src.controllers.dashboard_metrics import DashboardMetrics 
 from src.controllers.customers_creator import CustomersCreator 
 from src.controllers.customer_finder import CustomerFinder 
+from src.controllers.customer_deleter import CustomersDeleter
 
 # Importação de Repositorios
 from src.models.repositories.products_repository import ProductsRepository
@@ -126,13 +127,30 @@ def find_sales_summary():
 ## ## CUSTOMERS
 ##
 
+@inventory_bp.route("/customers/<user_id>/<costumer_id>/info", methods=["GET"])
+def get_customer_info(user_id, costumer_id):
+    conn = db_connection_handler.get_connection()
+    customers_repository = CustomersRepository(conn)
+    controller = CustomerFinder(customers_repository)
+
+    print(user_id, costumer_id)
+
+    request_data = {}
+    request_data['customer_id'] = costumer_id 
+    request_data['user_id'] = user_id
+
+    print("sadas: ", request_data)
+
+    response = controller.find_one_custumer(request_data)
+    return jsonify(response['body']), response['status_code']
+
 @inventory_bp.route("/customers/all", methods=["POST"])
 def find_all_customers():
     conn = db_connection_handler.get_connection()
     customers_repository = CustomersRepository(conn)
     controller = CustomerFinder(customers_repository)
 
-    response = controller.find_all_product(request.json)
+    response = controller.find_all_custumer(request.json)
     return jsonify(response['body']), response['status_code']
 
 @inventory_bp.route("/customers/create", methods=["POST"])
@@ -142,4 +160,13 @@ def create_customers():
     controller = CustomersCreator(customers_repository)
 
     response = controller.create_new_customers(request.json)
+    return jsonify(response['body']), response['status_code']
+
+@inventory_bp.route("/customers/delete", methods=["DELETE"])
+def delete_customers():
+    conn = db_connection_handler.get_connection()
+    customers_repository = CustomersRepository(conn)
+    controller = CustomersDeleter(customers_repository)
+    
+    response = controller.delete_customers(request.json)
     return jsonify(response['body']), response['status_code']

@@ -8,7 +8,6 @@ import { useGetAllProductsQuery } from "../state/api";
 import { Product } from "../type/type";
 
 const columns = [
-  { field: "productId", headerName: "ID", width: 90 },
   { field: "name", headerName: "Product Name", width: 200 },
   { field: "price", headerName: "Price", width: 110 },
   { field: "rating", headerName: "Rating", width: 110 },

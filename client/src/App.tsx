@@ -8,6 +8,7 @@ import { Dashboard } from "./dashboard/page";
 import { Inventory } from "./inventory/page";
 import AuthScreen from "./login-register/page";
 import { Products } from "./products/page";
+import { CustomerDetails } from "./purchase-history/page";
 import StoreProvider, { useAppSelector } from "./redux";
 import { Settings } from "./settings/page";
 
@@ -77,6 +78,14 @@ const AppLayout = () => {
             element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/customer-details/:customer_id"
+            element={
+              <ProtectedRoute>
+                <CustomerDetails />
               </ProtectedRoute>
             }
           />

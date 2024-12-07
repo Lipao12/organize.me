@@ -39,6 +39,10 @@ type CustomersResponse = {
   customers: Customer[];
 };
 
+type OneCustomerResponse = {
+  customer_info: {email: string, name: string, phone: string};
+};
+
 type ExpensesSummaryResponse = {
   total_expenses: {
     total_expenses: number,
@@ -70,6 +74,11 @@ export interface NewCutomers {
   name: string;
   email?: string;
   phone?: string;
+}
+
+export interface DeleteCutomers {
+  customer_id: string;
+  user_id: string | null;
 }
 
 interface UserResponse {
@@ -113,6 +122,14 @@ export const api = createApi({
         url: "/customers/create",
         method: "POST",
         body: newCutomers,
+      }),
+      invalidatesTags: ["Cutomers"],
+    }),
+    deleteCutomer: build.mutation<Customer, DeleteCutomers>({
+      query: (customer_info) => ({
+        url: "/customers/delete",
+        method: "DELETE",
+        body: customer_info,
       }),
       invalidatesTags: ["Cutomers"],
     }),
@@ -183,6 +200,13 @@ export const api = createApi({
       }),
       providesTags: ["Products"],
     }),
+    getOneCustomer: build.query<OneCustomerResponse, string | void | any>({
+      query: ({corr_user_id, customer_id}) => ({
+        url: `/customers/${corr_user_id}/${customer_id}/info`,
+        method: "GET",
+      }),
+      providesTags: ["Cutomers"],
+    }),
     getAllCustomers: build.query<CustomersResponse, string | void | any>({
       query: (body) => ({
         url: "/customers/all",
@@ -198,4 +222,4 @@ export const {useLoginMutation,
   useRegisterMutation, useGetProductsQuery, useGetAllProductsQuery, 
   useCreateProductMutation, useGetUserQuery, useUpdateUserMutation, useGetExpensesByCategoryQuery,
   useGetPopularProductsQuery, useGetSummaryExpensesQuery, useGetPurchaseSummaryQuery, useGetSalesSummaryQuery,
-  useGetAllCustomersQuery, useCreateCutomerMutation} = api;
+  useGetAllCustomersQuery, useCreateCutomerMutation, useGetOneCustomerQuery, useDeleteCutomerMutation} = api;

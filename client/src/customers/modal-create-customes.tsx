@@ -100,6 +100,8 @@ export const CreateCustomerModal = ({
         {error && (
           <p className="text-red-500 text-sm mt-2">
             Erro ao adicionar cliente. Tente novamente.
+            <br />
+            {error.data.error}
           </p>
         )}
       </div>

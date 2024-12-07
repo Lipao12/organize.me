@@ -1,20 +1,25 @@
 "use client";
 
-import { PlusCircleIcon, Search } from "lucide-react";
+import { Edit2, PlusCircleIcon, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Loading } from "../(components)/loading";
+import { useAppSelector } from "../redux";
 import { useGetAllCustomersQuery } from "../state/api";
 import { Customer } from "../type/type";
-import { CreateCustomerModal } from "./modal_create_client";
+import { CreateCustomerModal } from "./modal-create-customes";
+import { DeleteCustomerModal } from "./modal-delete-customer";
 
 const columns = [
-  { field: "customers_id", headerName: "ID", width: 90 },
   { field: "name", headerName: "Nome do Cliente", width: 200 },
   { field: "email", headerName: "E-mail", width: 200 },
   { field: "phone", headerName: "Telefone", width: 150 },
+  { field: "purchaseHistory", headerName: "Histórico de Compras", width: 200 },
+  { field: "actions", headerName: "Ações", width: 150 },
 ];
 
 export const CustomerList = () => {
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
   const user_id = {
     user_id:
       typeof window !== "undefined" ? localStorage.getItem("user_id") : null,
@@ -27,8 +32,6 @@ export const CustomerList = () => {
   } = useGetAllCustomersQuery(user_id);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-
-  console.log(isLoading);
 
   const filteredCustomers = Array.isArray(customers?.customers)
     ? customers.customers.filter((customer: Customer) =>
@@ -48,7 +51,13 @@ export const CustomerList = () => {
     });
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+  const [selectCustomerInfo, setSelectedCustomerInfo] = useState({
+    customerId: "",
+    customerName: "",
+    userId: user_id,
+  });
 
   const sortedCustomers = sortCustomers(filteredCustomers, sortConfig);
 
@@ -64,11 +73,24 @@ export const CustomerList = () => {
     value ?? <span className="text-gray-500 italic">Não informado</span>;
 
   const openCreateProductModal = () => {
-    setIsModalOpen(true);
+    setIsModalCreateOpen(true);
   };
 
   const closeCreateProductModal = () => {
-    setIsModalOpen(false);
+    setIsModalCreateOpen(false);
+  };
+
+  const openDeleteProductModal = (customerId: string, customerName: string) => {
+    setSelectedCustomerInfo({
+      ...selectCustomerInfo,
+      customerId,
+      customerName,
+    });
+    setIsModalDeleteOpen(true);
+  };
+
+  const closeDeleteProductModal = () => {
+    setIsModalDeleteOpen(false);
   };
 
   if (isLoading) {
@@ -146,20 +168,65 @@ export const CustomerList = () => {
         </thead>
         <tbody>
           {sortedCustomers.map((customer: Customer) => (
-            <tr key={customer.customers_id} className="border-b">
+            <tr
+              key={customer.customers_id}
+              className={`border-b hover:bg-zinc-100 ${
+                isDarkMode ? "dark:hover:bg-zinc-700" : ""
+              }  `}
+            >
               {columns.map((col) => (
                 <td key={col.field} className="px-4 py-2 text-gray-700">
-                  {formatValue((customer as any)[col.field])}
+                  {col.field === "actions" ? (
+                    <div className="flex space-x-5">
+                      <button
+                        type="button"
+                        onClick={() => {}} // openEditCustomerModal(customer)
+                        className="text-blue-500 hover:text-blue-700"
+                      >
+                        {""}
+                        <Edit2 className="w-5 h-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          openDeleteProductModal(
+                            customer.customers_id,
+                            customer.name
+                          );
+                        }} //handleDeleteCustomer(customer.customers_id)
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        {""}
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  ) : col.field === "purchaseHistory" ? (
+                    <Link
+                      to={`/customer-details/${customer.customers_id}`}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      Ver Histórico
+                    </Link>
+                  ) : (
+                    formatValue((customer as any)[col.field])
+                  )}
                 </td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
-      {isModalOpen && (
+      {isModalCreateOpen && (
         <CreateCustomerModal
-          isOpen={isModalOpen}
+          isOpen={isModalCreateOpen}
           onClose={closeCreateProductModal}
+        />
+      )}
+      {isModalDeleteOpen && (
+        <DeleteCustomerModal
+          isOpen={isModalDeleteOpen}
+          onClose={closeDeleteProductModal}
+          customerInfo={selectCustomerInfo}
         />
       )}
     </div>
