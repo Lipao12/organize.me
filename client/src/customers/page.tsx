@@ -56,7 +56,7 @@ export const CustomerList = () => {
   const [selectCustomerInfo, setSelectedCustomerInfo] = useState({
     customerId: "",
     customerName: "",
-    userId: user_id,
+    userId: user_id.user_id,
   });
 
   const sortedCustomers = sortCustomers(filteredCustomers, sortConfig);

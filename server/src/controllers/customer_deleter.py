@@ -17,7 +17,7 @@ class CustomersDeleter:
             } 
         
         try:
-            user_id = request_data['user_id']["user_id"]
+            user_id = request_data['user_id']
             customer_id = request_data['customer_id']
             print(customer_id, user_id)
 
