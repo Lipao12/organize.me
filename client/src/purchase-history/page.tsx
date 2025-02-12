@@ -8,7 +8,7 @@ export const CustomerDetails = () => {
   const { customer_id } = useParams();
   const user_id = { user_id: localStorage.getItem("user_id") };
   const corr_user_id = user_id.user_id;
-  const [purchases, setPurchases] = useState([]);
+  //const [purchases, setPurchases] = useState([]);
   console.log(corr_user_id);
   const {
     data: customers,
@@ -20,6 +20,10 @@ export const CustomerDetails = () => {
 
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (isError){
+    return <h1>Deu m...</h1>
   }
 
   return (

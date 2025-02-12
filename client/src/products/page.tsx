@@ -21,7 +21,7 @@ export const Products = () => {
     page_size: 12,
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  //const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   const {
     data: products,

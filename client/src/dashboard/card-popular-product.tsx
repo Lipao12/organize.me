@@ -12,6 +12,10 @@ const CardPopularProducts = () => {
     isLoading,
   } = useGetPopularProductsQuery(user_id);
 
+  if (error){
+    return <h1>Aconteceu um erro em card-popular-product</h1>
+  }
+
   return (
     <div className="row-span-3 xl:row-span-6 bg-white shadow-md rounded-2xl pb-16">
       {isLoading ? (
