@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../redux";
 import { useGetUserQuery, useUpdateUserMutation } from "../state/api";
 
-type UserSetting = {
+interface UserSetting {
   label: string;
   value: string | boolean;
   type: "text" | "toggle";
-};
+}
 
 export const Settings = () => {
   const userId = localStorage.getItem("user_id");
