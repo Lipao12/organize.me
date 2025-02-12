@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { Loading } from "../(components)/loading";
 import { RenderStars } from "../(components)/rating";
-import { useAppSelector } from "../redux";
+//import { useAppSelector } from "../redux";
 import { useGetProductsQuery } from "../state/api";
 import { Product } from "../type/type";
 import { CreateProductModal } from "./modal_create_product";
@@ -21,7 +21,7 @@ export const Products = () => {
     page_size: 12,
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  //const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   const {
     data: products,

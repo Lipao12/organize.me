@@ -72,7 +72,7 @@ const CardExpenseSummary = () => {
                     cx="50%"
                     cy="50%"
                   >
-                    {expenseCategories.map((entry, index) => (
+                    {expenseCategories.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={colors[index % colors.length]}

@@ -3,11 +3,17 @@
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { Loading } from "../(components)/loading";
-import { useAppSelector } from "../redux";
+//import { useAppSelector } from "../redux";
 import { useGetAllProductsQuery } from "../state/api";
 import { Product } from "../type/type";
 
-const columns = [
+interface Column<T> {
+  field: keyof T;
+  headerName: string;
+  width?: number; // Or string if you prefer string widths
+}
+
+const columns: Column<Product>[] = [
   { field: "name", headerName: "Product Name", width: 200 },
   { field: "price", headerName: "Price", width: 110 },
   { field: "rating", headerName: "Rating", width: 110 },
@@ -22,8 +28,11 @@ export const Inventory = () => {
     isLoading,
   } = useGetAllProductsQuery(user_id);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
-  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof Product;
+    direction: string;
+  }>({ key: "name", direction: "asc" });
+  //const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   if (isLoading) {
     return <Loading />;
@@ -43,7 +52,7 @@ export const Inventory = () => {
 
   const sortProducts = (
     products: Product[],
-    config: { key: string; direction: string }
+    config: { key: keyof Product; direction: string }
   ) => {
     const { key, direction } = config;
     return [...products].sort((a, b) => {
@@ -56,7 +65,7 @@ export const Inventory = () => {
   const sortedProducts = sortProducts(filteredProducts, sortConfig);
 
   // Função de manipulação de clique nos cabeçalhos
-  const handleSort = (key: string) => {
+  const handleSort = (key: keyof Product) => {
     let direction: "asc" | "desc" = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc";
@@ -119,17 +128,12 @@ export const Inventory = () => {
         </thead>
         <tbody>
           {sortedProducts.map((product: any) => (
-            <tr
-              key={product.productId}
-              className={`border-b hover:bg-zinc-100 ${
-                isDarkMode ? "dark:hover:bg-zinc-700" : ""
-              }  `}
-            >
+            <tr key={product.productId} className="border-b">
               {columns.map((col) => (
                 <td key={col.field} className="px-4 py-2 text-gray-700">
                   {col.field === "price"
                     ? `R$ ${product[col.field]}`
-                    : product[col.field] || "N/A"}
+                    : product[col.field] ?? "N/A"}
                 </td>
               ))}
             </tr>
