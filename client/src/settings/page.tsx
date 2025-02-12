@@ -24,7 +24,7 @@ export const Settings = () => {
 
   useEffect(() => {
     if (user) {
-      const settings = [
+      const settings: UserSetting[] = [
         { label: "Nome", value: user.name, type: "text" },
         { label: "Email", value: user.email, type: "text" },
       ];
