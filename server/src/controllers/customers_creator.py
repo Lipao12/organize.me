@@ -33,7 +33,7 @@ class CustomersCreator:
                 phone=phone,
                 email=email,
             )
-
+        
             return {
                 "body": {"customer_id": customer_id, "message": "Customer added successfully."},
                 "status_code": 201

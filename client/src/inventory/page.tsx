@@ -119,7 +119,12 @@ export const Inventory = () => {
         </thead>
         <tbody>
           {sortedProducts.map((product: any) => (
-            <tr key={product.productId} className="border-b">
+            <tr
+              key={product.productId}
+              className={`border-b hover:bg-zinc-100 ${
+                isDarkMode ? "dark:hover:bg-zinc-700" : ""
+              }  `}
+            >
               {columns.map((col) => (
                 <td key={col.field} className="px-4 py-2 text-gray-700">
                   {col.field === "price"

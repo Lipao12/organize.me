@@ -7,6 +7,7 @@ import {
   LogOutIcon,
   Menu,
   Moon,
+  ShoppingCart,
   SlidersHorizontal,
   Sun,
   Users,
@@ -78,6 +79,12 @@ export const Sidebar = () => {
             href="/dashboard"
             icon={Layout}
             label="Dashboard"
+            isCollapsed={isSidebarCollapsed}
+          />
+          <SidebarLink
+            href="/sales"
+            icon={ShoppingCart}
+            label="Vendas"
             isCollapsed={isSidebarCollapsed}
           />
           <SidebarLink

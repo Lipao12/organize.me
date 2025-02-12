@@ -31,7 +31,10 @@ export const CustomerList = () => {
     isLoading,
   } = useGetAllCustomersQuery(user_id);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
+  const [sortConfig, setSortConfig] = useState({
+    key: "",
+    direction: "asc",
+  });
 
   const filteredCustomers = Array.isArray(customers?.customers)
     ? customers.customers.filter((customer: Customer) =>

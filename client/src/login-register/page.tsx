@@ -20,6 +20,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../redux";
 import { setIsDarkMode } from "../state";
 import { useLoginMutation, useRegisterMutation } from "../state/api";
+import { GoogleButton } from "./google-button";
 
 const AuthForm = ({
   type,
@@ -30,68 +31,85 @@ const AuthForm = ({
   isLoading: boolean;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) => (
-  <form onSubmit={onSubmit} className="space-y-4">
-    {type === "register" && (
+  <div>
+    <form onSubmit={onSubmit} className="space-y-4">
+      {type === "register" && (
+        <div className="space-y-2">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Nome
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Seu nome"
+            required
+            className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+      )}
       <div className="space-y-2">
         <label
-          htmlFor="name"
+          htmlFor="email"
           className="block text-sm font-medium text-gray-700"
         >
-          Nome
+          Email
         </label>
         <input
-          id="name"
-          name="name"
-          type="text"
-          placeholder="Seu nome"
+          id="email"
+          name="email"
+          type="email"
+          placeholder="seu@email.com"
           required
           className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
-    )}
-    <div className="space-y-2">
-      <label
-        htmlFor="email"
-        className="block text-sm font-medium text-gray-700"
+      <div className="space-y-2">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Senha
+        </label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={isLoading}
+        className={`text-lg w-full py-3 text-zinc-50 rounded-md bg-zinc-600 ${
+          isLoading
+            ? " cursor-not-allowed"
+            : "hover:bg-zinc-800 transform duration-300"
+        }`}
       >
-        Email
-      </label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        placeholder="seu@email.com"
-        required
-        className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
-      />
+        {isLoading
+          ? "Carregando..."
+          : type === "login"
+          ? "Entrar"
+          : "Registrar"}
+      </button>
+    </form>
+    <div className="flex flex-row items-center my-5">
+      <div className="flex-grow border-t border-zinc-300"></div>
+      <span className="mx-4 text-zinc-500 text-sm">or</span>
+      <div className="flex-grow border-t border-zinc-300"></div>
     </div>
-    <div className="space-y-2">
-      <label
-        htmlFor="password"
-        className="block text-sm font-medium text-gray-700"
-      >
-        Senha
-      </label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        required
-        className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
-      />
-    </div>
-    <button
-      type="submit"
-      disabled={isLoading}
-      className={`text-lg w-full py-3 text-zinc-50 rounded-md bg-zinc-600 ${
-        isLoading
-          ? " cursor-not-allowed"
-          : "hover:bg-zinc-800 transform duration-300"
-      }`}
-    >
-      {isLoading ? "Carregando..." : type === "login" ? "Entrar" : "Registrar"}
-    </button>
-  </form>
+    <GoogleButton
+      isLoading={isLoading}
+      onClick={() => {
+        console.log("Google");
+      }}
+    />
+  </div>
 );
 
 export default function AuthScreen() {
