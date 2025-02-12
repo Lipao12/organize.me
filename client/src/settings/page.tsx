@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../redux";
 import { useGetUserQuery, useUpdateUserMutation } from "../state/api";
 
-/*type UserSetting = {
+type UserSetting = {
   label: string;
   value: string | boolean;
   type: "text" | "toggle";
-};*/
+};
 
 export const Settings = () => {
   const userId = localStorage.getItem("user_id");
-  const [userSettings, setUserSettings] = useState<>([]);//useState<UserSetting[]>([]);
+  const [userSettings, setUserSettings] = useState<UserSetting[]>([]);//useState<UserSetting[]>([]);
   const {
     data: user,
     isLoading,
